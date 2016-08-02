@@ -6,6 +6,7 @@ import org.fao.crowd.dto.FilteredData;
 import org.fao.fenix.commons.utils.CSVWriter;
 import org.fao.fenix.commons.utils.FileUtils;
 import org.fao.fenix.commons.utils.JSONUtils;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.NotAcceptableException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
 
@@ -43,7 +45,6 @@ public class DownloadServcice extends HttpServlet {
         } catch (Exception e) {
             throw new ServletException(e);
         }
-        super.doPost(req, resp);
     }
 
 
@@ -54,18 +55,17 @@ public class DownloadServcice extends HttpServlet {
         } catch (NotAcceptableException ex) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
+        } catch (NotFoundException ex) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            return;
         }
 
-        if (data.isEmpty())
-            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-        else {
-            resp.setContentType(MediaType.TEXT_PLAIN);
-            resp.addHeader("Content-Disposition", "attachment;filename=crowdDataExport.csv");
-            OutputStream out = resp.getOutputStream();
-            new CSVWriter(out, null, null, null, null, null, null, data.getHeader())
-                    .write(data.getData(), Integer.MAX_VALUE);
-            out.close();
-        }
+        resp.setContentType(MediaType.TEXT_PLAIN);
+        resp.addHeader("Content-Disposition", "attachment;filename=crowdDataExport.csv");
+        OutputStream out = resp.getOutputStream();
+        new CSVWriter(out, null, null, null, null, null, null, data.getHeader())
+                .write(data.getData(), Integer.MAX_VALUE);
+        out.close();
     }
 
 

@@ -8,7 +8,9 @@ import org.fao.fenix.commons.utils.database.DatabaseUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotAcceptableException;
+import javax.ws.rs.NotFoundException;
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 public class DataDao {
@@ -51,7 +53,11 @@ public class DataDao {
             PreparedStatement statement = connection.prepareStatement(buildFilterDataQuery(connection, filter, params));
             databaseUtils.fillStatement(statement, null, params.toArray());
             ResultSet rawData = statement.executeQuery();
-            return new FilteredData(getHeader(rawData), new DataIterator(rawData, connection, null, null));
+            FilteredData result = new FilteredData(getHeader(rawData), new DataIterator(rawData, connection, null, null));
+            if (result.isEmpty())
+                throw new NotFoundException();
+            else
+                return result;
         } catch (Exception ex) {
             connection.close();
             throw ex;
@@ -83,11 +89,11 @@ public class DataDao {
         }
         if (filter.from != null) {
             where.append(" AND date >= ?");
-            params.add(filter.from);
+            params.add(new Date(filter.from.getTime()));
         }
         if (filter.to != null) {
             where.append(" AND date <= ?");
-            params.add(filter.to);
+            params.add(new Date(filter.to.getTime()));
         }
 
         return  "SELECT " + exportQuerySelection + " FROM " +
@@ -116,7 +122,9 @@ public class DataDao {
         String name = rawData.next() ? rawData.getString(1) : null;
         rawData.close();
         statement.close();
-        return name!=null ? "data_"+name.trim().replace(' ','_').toLowerCase() : null;
+        if (name!=null && !connection.getMetaData().getTables(null, null, name="data_"+name.trim().replace(' ','_').toLowerCase(), null).next())
+            throw new NotFoundException();
+        return name;
     }
 
 
