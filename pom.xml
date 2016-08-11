@@ -40,6 +40,39 @@
     </build>
 
 
+    <profiles>
+        <profile>
+            <id>jboss</id>
+        </profile>
+        <profile>
+            <id>tomcat</id>
+            <activation><activeByDefault>true</activeByDefault></activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.fao.fenix</groupId>
+                    <artifactId>tomcat-J2EE</artifactId>
+                    <version>1.0</version>
+                </dependency>
+                <!-- Jackson custom configuration support -->
+                <dependency>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                    <version>${jackson.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                    <version>${jackson.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                    <artifactId>jackson-jaxrs-json-provider</artifactId>
+                    <version>${jackson.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <distributionManagement>
         <repository>
             <id>snapshots</id>
@@ -57,36 +90,14 @@
            <version>7.0</version>
            <scope>provided</scope>
        </dependency>
-       <dependency>
-           <groupId>org.fao.fenix</groupId>
-           <artifactId>tomcat-J2EE</artifactId>
-           <version>1.0</version>
-       </dependency>
 
-       <!-- Jackson custom configuration support -->
-       <dependency>
-           <groupId>com.fasterxml.jackson.core</groupId>
-           <artifactId>jackson-core</artifactId>
-           <version>${jackson.version}</version>
-       </dependency>
-
-       <dependency>
-           <groupId>com.fasterxml.jackson.core</groupId>
-           <artifactId>jackson-annotations</artifactId>
-           <version>${jackson.version}</version>
-       </dependency>
-
+       <!-- Jackson Utils -->
        <dependency>
            <groupId>com.fasterxml.jackson.core</groupId>
            <artifactId>jackson-databind</artifactId>
            <version>${jackson.version}</version>
        </dependency>
 
-       <dependency>
-           <groupId>com.fasterxml.jackson.jaxrs</groupId>
-           <artifactId>jackson-jaxrs-json-provider</artifactId>
-           <version>${jackson.version}</version>
-       </dependency>
 
        <!-- Cross domain support -->
        <dependency>
@@ -123,44 +134,6 @@
            <version>4.11</version>
            <scope>test</scope>
        </dependency>
-
-
-       <!-- REST Client
-       <dependency>
-           <groupId>org.jboss.resteasy</groupId>
-           <artifactId>resteasy-client</artifactId>
-           <version>${resteasy.version}</version>
-       </dependency>
-       <dependency>
-           <groupId>org.jboss.resteasy</groupId>
-           <artifactId>resteasy-jackson-provider</artifactId>
-           <version>${resteasy.version}</version>
-       </dependency>
--->
-        <!-- D3S commons & utils 
-        <dependency>
-            <groupId>org.fao.fenix</groupId>
-            <artifactId>fenix-commons-dxf</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.orientechnologies</groupId>
-            <artifactId>orientdb-client</artifactId>
-            <version>${orient.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.orientechnologies</groupId>
-            <artifactId>orientdb-object</artifactId>
-            <version>${orient.version}</version>
-        </dependency>
--->
-       <!-- CDI 
-       <dependency>
-           <groupId>org.jboss.weld.se</groupId>
-           <artifactId>weld-se</artifactId>
-           <version>2.3.4.Final</version>
-       </dependency>
--->
 
     </dependencies>
 </project>

@@ -114,6 +114,10 @@ public class DataDao {
     }
 
     private String getCountryTableName(Connection connection, String country) throws SQLException {
+        return "data_"+country;
+    }
+    /*
+    private String getCountryTableName(Connection connection, String country) throws SQLException {
         if (country==null)
             return null;
         PreparedStatement statement = connection.prepareStatement("SELECT name FROM gaul0 WHERE code = ?");
@@ -127,5 +131,5 @@ public class DataDao {
         return name;
     }
 
-
+*/
 }
